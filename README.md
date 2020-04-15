@@ -64,21 +64,19 @@ The figure below shows what the simulator looks like when the C++ program is usi
 
 ---
 ## Installation and Setup
-This repository includes two files that can be used to set up and install [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO.
+### Dependencies
 
-Once the install for uWebSocketIO is complete, the main program can be built and run by executing the following commands from the project top directory.
+- openssl libuv cmake zlib (installed via brew or apt)
+- uWebSockets
 
-```sh
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-$ ./ExtendedKF
-```
+### Installer Scripts
+This repository includes two files that can be used to set up and install [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems.
+- `install-mac.sh`
+- `install-linux.sh`
 
+For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO.
 
----
-## Other Important Dependencies
+### Other Important Dependencies
 
 * cmake >= 3.5
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
@@ -91,48 +89,30 @@ $ ./ExtendedKF
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
 
----
-## Basic Build Instructions
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-   * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
-4. Run it: `./ExtendedKF `
+### Basic Build Instructions
+Once the install for uWebSocketIO is complete, the main program can be built and run by executing the following commands from the project top directory.
 
----
-## Editor Settings
+```sh
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ./ExtendedKF
+```
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+Note! On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+## Setting up IDE e.g. Xcode
+Follow the guide in `ide_profiles/xcode/README.md` to set up Xcode for compiling the program.
 
----
-## Code Style
-
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
 
 ---
 ## Generating Additional Data
-
-`This is optional!`
-
-If you'd like to generate your own radar and lidar data, see the
+Additional lidar and radar data can be generated. See the
 [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
 Matlab scripts that can generate additional data.
 
----
-## Project Instructions and Rubric
-
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
-
-More information is only accessible by people who are already enrolled in Term 2 (three-term version) or Term 1 (two-term version)
-of CarND. If you are enrolled, see the Project Resources page in the classroom
-for instructions and the project rubric.
 
 ---
 ## Results
@@ -161,8 +141,9 @@ It is seen from the three figures that utilizing both lidar and radar as data so
 ## Known Issues
 
 ### Simulator in macOS Catalina
+If you get and error when launching the simulator for macOS Catalina, you may have to chance permission for the simulatior. In a terminal run the following command in the folder where your simulator is located.
 
-```
+```sh
 $ chmod a+x term2_sim.app/Contents/MacOS/*
 ```
 
