@@ -4,84 +4,78 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 ## Project Details
-In this project you will utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements. Passing the project requires obtaining RMSE values that are lower than the tolerance outlined in the project rubric.
+In this project a `Kalman Filter/Extended Kalman Filter` is utilized to estimate the state of a moving object of interest with noisy lidar and radar measurements.
+
+The sensor fusion algorithm follows the general processing flow. The first measurements is used to initialize the state vectors and covariance matrices. Following the initialization, with the next measurement received, the algorithm predicts the object position at the current timestep and then updates the prediction using the new measurement. The implementation is set up to handle both lidar and radar measurements. The lidar measurements are handled with a standar Kalman Filter, while the radar, due to non-linearity, is handled with an Extended Kalman Filter.
+
+In the results section, the final implementation results are presented. The accuracy for lidar only, radar only, and both sensors combined is presented. It shows that utilizing both lidar and radar together provides the best accuracy.
+
+The implementation is considered succesful when achieving lower RMSE values than the prescribed `[.11, .11, 0.52, 0.52]` for `px`, `py`, `vx`, and `vy` repectively. The current implementation succeeds in this by achieving an RMSE of `[0.10, 0.09, 0.48, 0.46]`.
+
 
 ---
-## What Needs to Be Done
-These files have been edited to complete the project
-- `FusionEKF.cpp`: initialize the Kalman filter
-    - initialize variables and matrices (x, F, H_laser, H_jacobian, P, etc.)
-    - initialize the Kalman filter position vector with the first sensor measurements
-    - modify the F and Q matrices prior to the prediction step based on the elapsed time between measurements
-    - call the update step for either the lidar or radar sensor measurement. Because the update step for lidar and radar are slightly different, there are different functions for updating lidar and radar
-- `kalman_filter.cpp`: implement predict and update equations
-    - Update the state transition matrix F according to the new elapsed time. Time is measured in seconds
-    - Update the process noise covariance matrix
-    - Use the sensor type to perform the update step
-    - Update the state and covariance matrices
-- `Tools.cpp`: calculate RMS error and the Jacobian matrix
-    - Calculate the RMSE
-    - Calculate a Jacobian
+## Implementation Details
+The following files have been edited to complete the project
+- `FusionEKF.cpp`
+    - Initialize the Kalman Filter
+    - Initialize variables and matrices (x, F, H_laser, H_jacobian, P, etc.)
+    - Initialize the Kalman filter position vector with the first sensor measurements
+    - Modify the state transition F matrix and Q matrix prior to the prediction step based on the elapsed time between measurements. Time is measured in seconds
+    - Call the update step for either the lidar or radar sensor measurement. Because the update step for lidar and radar are slightly different, there are different functions for updating lidar and radar
+- `kalman_filter.cpp`
+    - Implement predict and update equations for the Kalman Filter and Extended Kalman Filter
+- `Tools.cpp`
+    - Calculate the Root Mean Square Error (RMSE)
+    - Calculate the Jacobian matrix
 
+<!--
 ### Summary
 1. In `tools.cpp`, fill in the functions that calculate root mean squared error (RMSE) and the Jacobian matrix.
 1. Fill in the code in `FusionEKF.cpp`. You'll need to initialize the Kalman Filter, prepare the Q and F matrices for the prediction step, and call the radar and lidar update functions.
 1. In `kalman_filter.cpp`, fill out the `Predict()`, `Update()`, and `UpdateEKF()` functions.
-
+ -->
 
 ---
-## Simulation details
-This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases).
+## Simulation Details
+This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases). The simulator provides measurement data from a lidar and radar tracking a moving car. F
+
+The main protocol that main.cpp uses for uWebSocketIO in communicating with the simulator is as follows:
+
+`INPUT`: values provided by the simulator to the c++ program
+- `["sensor_measurement"]` => the measurement that the simulator observed (either lidar or radar)
+
+`OUTPUT`: values provided by the c++ program to the simulator
+- `["estimate_x"]` <= kalman filter estimated position x
+- `["estimate_y"]` <= kalman filter estimated position y
+- `["rmse_x"]`
+- `["rmse_y"]`
+- `["rmse_vx"]`
+- `["rmse_vy"]`
 
 Image legend:
 - `Red circles`: lidar measurements are
 - `Blue circles`: radar measurements with an arrow pointing in the direction of the observed angle
 - `Green triangles`: estimation markers from running the Kalman Filter
 
-The video below shows what the simulator looks like when a c++ script is using its Kalman filter to track the object. The simulator provides the script the measured data (either lidar or radar), and the script feeds back the measured estimation marker, and RMSE values from its Kalman filter.
+The figure below shows what the simulator looks like when the C++ program is using its Kalman Filter to track the object. The simulator provides the measured data (either lidar or radar), and the C++ feeds back the measured estimation marker (green), and RMSE values from its Kalman Filter.
 
 ![image](docs/simulation.jpg)
 
 
 ---
 ## Installation and Setup
-This repository includes two files that can be used to set up and install [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO. Please see the uWebSocketIO Starter Guide page in the classroom within the EKF Project lesson for the required version and installation scripts.
+This repository includes two files that can be used to set up and install [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO.
 
-Once the install for uWebSocketIO is complete, the main program can be built and run by doing the following from the project top directory.
+Once the install for uWebSocketIO is complete, the main program can be built and run by executing the following commands from the project top directory.
 
-1. mkdir build
-2. cd build
-3. cmake ..
-4. make
-5. ./ExtendedKF
+```sh
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ./ExtendedKF
+```
 
-Tips for setting up your environment can be found in the classroom lesson for this project.
-
-Note that the programs that need to be written to accomplish the project are src/FusionEKF.cpp, src/FusionEKF.h, kalman_filter.cpp, kalman_filter.h, tools.cpp, and tools.h
-
-The program main.cpp has already been filled out, but feel free to modify it.
-
-Here is the main protocol that main.cpp uses for uWebSocketIO in communicating with the simulator.
-
-
-**INPUT**: values provided by the simulator to the c++ program
-
-["sensor_measurement"] => the measurement that the simulator observed (either lidar or radar)
-
-
-**OUTPUT**: values provided by the c++ program to the simulator
-
-["estimate_x"] <= kalman filter estimated position x
-
-["estimate_y"] <= kalman filter estimated position y
-
-["rmse_x"]
-
-["rmse_y"]
-
-["rmse_vx"]
-
-["rmse_vy"]
 
 ---
 ## Other Important Dependencies
@@ -140,11 +134,28 @@ More information is only accessible by people who are already enrolled in Term 2
 of CarND. If you are enrolled, see the Project Resources page in the classroom
 for instructions and the project rubric.
 
+---
 ## Results
-Target RMSE
-px, py, vx, and vy RMSE should be less than or equal to the values `[.11, .11, 0.52, 0.52]`.
 
-Achieved RMSE: `[0.10, 0.09, 0.48, 0.46]`.
+### Accuracy
+
+Target RMSE: px, py, vx, and vy RMSE should be less than or equal to the values `[.11, .11, 0.52, 0.52]`.
+
+By running the implementation the following RMSE is achived for px, py, vx, vy respectively: `[0.10, 0.09, 0.48, 0.46]`.
+
+### Visualization in simulator
+Below, three scenarios are visualized with the implemented Kalman Filter, where one or multiple senor inputs are utilized
+
+1. Lidar only: RMSE = `[0.15, 0.12, 0.67, 0.55]`
+1. Radar only: RMSE = `[0.23, 0.34, 0.60, 0.82]`
+1. Lidar and radar RMSE = `[0.10, 0.09, 0.48, 0.46]`
+
+It is seen from the three figures that utilizing both lidar and radar as data sources instead of only one yields a better estimation.
+
+![image](docs/laser_only.jpg "KF with lidar only")
+![image](docs/radar_only.jpg "EKF with radar only")
+![image](docs/laser_and_radar.jpg "EKF with lidar and laser")
+
 
 ---
 ## Known Issues
