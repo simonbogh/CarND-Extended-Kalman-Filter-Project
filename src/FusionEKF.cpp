@@ -37,7 +37,13 @@ FusionEKF::FusionEKF() {
    * TODO: Set the process and measurement noises
    */
 
+  //Laser H matrix
+  H_laser_ << 1, 0, 0, 0,
+              0, 1, 0, 0;
 
+  Hj_ << 1, 1, 0, 0,
+         1, 1, 0, 0,
+         1, 1, 1, 1;
 }
 
 /**
@@ -59,17 +65,66 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // first measurement
     cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
-    ekf_.x_ << 1, 1, 1, 1;
+    ekf_.x_ << 1, 1, 1, 1; // x, y, vx, vy
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-      // TODO: Convert radar from polar to cartesian coordinates 
+      // TODO: Convert radar from polar to cartesian coordinates
       //         and initialize state.
+        cout << "Converting radar from polar to cartesian coordinates" << endl;
 
+      // Range: radial distance from origin
+        cout << "Setting Rho" << endl;
+      float rho = measurement_pack.raw_measurements_[0];
+      // Bearing: angle between rho and x-axis
+       cout << "Setting Phi" << endl;
+      float phi = measurement_pack.raw_measurements_[1];
+      // Radial velocity: rho dot, change of Rho (range rate)
+       cout << "Setting Rho_dot" << endl;
+      float rho_dot = measurement_pack.raw_measurements_[2];
+
+        cout << "Setting x" << endl;
+      float x = rho * cos(phi);
+        cout << "Setting y" << endl;
+      float y = rho * sin(phi);
+      // Velocity unknown at initialization, setting to 0
+      float vx = 0;
+      float vy = 0;
+
+      ekf_.x_ << x, y, vx, vy;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
+        cout << "Initializing laser state" << endl;
 
+      cout << "Setting x" << endl;
+      float x = measurement_pack.raw_measurements_[0];
+      cout << "Setting y" << endl;
+      float y = measurement_pack.raw_measurements_[1];
+      // Velocity unknown at initialization, setting to 0
+      float vx = 0;
+      float vy = 0;
+
+      cout << "Saving to ekf_.x_" << endl;
+      ekf_.x_ << x, y, vx, vy;
     }
+
+    // State covariance matrix P
+    cout << "Initializing state covariance matrix P" << endl;
+    ekf_.P_ = MatrixXd(4, 4);
+    ekf_.P_ << 1, 0, 0, 0,
+               0, 1, 0, 0,
+               0, 0, 1000, 0,
+               0, 0, 0, 1000;
+
+    // Initial transition matrix F
+    ekf_.F_ = MatrixXd(4, 4);
+    ekf_.F_ << 1, 0, 1, 0,
+               0, 1, 0, 1,
+               0, 0, 1, 0,
+               0, 0, 0, 1;
+
+    // Set initial timestamp
+    previous_timestamp_ = measurement_pack.timestamp_;
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
