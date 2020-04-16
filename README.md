@@ -39,7 +39,7 @@ The following files have been edited to complete the project
 
 ---
 ## Simulation Details
-This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases). The simulator provides measurement data from a lidar and radar tracking a moving car. F
+This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases). The simulator provides measurement data from a lidar and radar tracking a moving car.
 
 The main protocol that main.cpp uses for uWebSocketIO in communicating with the simulator is as follows:
 
