@@ -119,6 +119,10 @@ Matlab scripts that can generate additional data.
 
 
 ---
+## Additional Visualization Tools
+A visualization package can be found within the [Sensor Fusion utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities). Here you find different examples on how to visualize the EKF data.
+
+---
 ## Results
 
 ### Accuracy
