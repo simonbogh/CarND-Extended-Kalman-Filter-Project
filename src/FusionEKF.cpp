@@ -13,6 +13,8 @@ using std::vector;
  * Constructor.
  */
 FusionEKF::FusionEKF() {
+  // cout << "Initializing FusionEKF" << endl;
+
   is_initialized_ = false;
 
   previous_timestamp_ = 0;
@@ -61,6 +63,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * TODO: Create the covariance matrix.
      * You'll need to convert radar from polar to cartesian coordinates.
      */
+    // cout << "Initializing state ekf_.x_" << endl;
 
     // first measurement
     cout << "EKF: " << endl;
@@ -70,7 +73,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates
       //         and initialize state.
-        cout << "Converting radar from polar to cartesian coordinates" << endl;
+      // cout << "Converting radar from polar to cartesian coordinates" << endl;
 
       // Range: radial distance from origin
         cout << "Setting Rho" << endl;
@@ -94,22 +97,22 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
-        cout << "Initializing laser state" << endl;
+      // cout << "Initializing laser state" << endl;
 
-      cout << "Setting x" << endl;
+      // cout << "Setting x" << endl;
       float x = measurement_pack.raw_measurements_[0];
-      cout << "Setting y" << endl;
+      // cout << "Setting y" << endl;
       float y = measurement_pack.raw_measurements_[1];
       // Velocity unknown at initialization, setting to 0
       float vx = 0;
       float vy = 0;
 
-      cout << "Saving to ekf_.x_" << endl;
+      // cout << "Saving to ekf_.x_" << endl;
       ekf_.x_ << x, y, vx, vy;
     }
 
     // State covariance matrix P
-    cout << "Initializing state covariance matrix P" << endl;
+    // cout << "Initializing state covariance matrix P" << endl;
     ekf_.P_ = MatrixXd(4, 4);
     ekf_.P_ << 1, 0, 0, 0,
                0, 1, 0, 0,
@@ -166,6 +169,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
               0,                  dt_3/2*noise_ay,   0,               dt_2*noise_ay;
 
   // Call the Kalman Filter predict() function
+  // cout << "Calling ekf_.Predict()" << endl;
+
   ekf_.Predict();
 
   /**
