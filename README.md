@@ -57,6 +57,8 @@ Image legend:
 - `Blue circles`: radar measurements with an arrow pointing in the direction of the observed angle
 - `Green triangles`: estimation markers from running the Kalman Filter
 
+![image](docs/sim_zoom.jpg "Simulation legend")
+
 The figure below shows what the simulator looks like when the C++ program is using its Kalman Filter to track the object. The simulator provides the measured data (either lidar or radar), and the C++ feeds back the measured estimation marker (green), and RMSE values from its Kalman Filter.
 
 ![image](docs/simulation.jpg)
