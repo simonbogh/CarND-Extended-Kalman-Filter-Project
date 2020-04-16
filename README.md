@@ -12,6 +12,8 @@ In the results section, the final implementation results are presented. The accu
 
 The implementation is considered succesful when achieving lower RMSE values than the prescribed `[.11, .11, 0.52, 0.52]` for `px`, `py`, `vx`, and `vy` repectively. The current implementation succeeds in this by achieving an RMSE of `[0.10, 0.09, 0.48, 0.46]`.
 
+![image](docs/simulation.gif "Simulation with EKF running")
+
 
 ---
 ## Implementation Details
